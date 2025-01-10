@@ -6,13 +6,13 @@ package ec2_test
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-provider-aws/internal/acctest"
-
 	"github.com/hashicorp/terraform-provider-aws/names"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
-func TestAccEC2AwsVpcIpamsDataSourceTiered(t *testing.T) {
+func TestAccEC2VPCIPAMsDataSource_Tiered(t *testing.T) {
 	ctx := acctest.Context(t)
 	resourceName := "aws_vpc_ipam.test"
 	dataSourceName := "data.aws_vpc_ipams.test"
@@ -30,7 +30,7 @@ func TestAccEC2AwsVpcIpamsDataSourceTiered(t *testing.T) {
 		CheckDestroy:             acctest.CheckDestroyNoop,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAwsVpcIpamsDataSourceConfig_filterWithTiers(),
+				Config: testAccVPCIPAMsDataSourceConfig_filterWithTiers(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "ipams.0.operating_regions.0.region_name", resourceName, "operating_regions.0.region_name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "ipams.0.tags.#", resourceName, "tags.#"),
@@ -42,7 +42,7 @@ func TestAccEC2AwsVpcIpamsDataSourceTiered(t *testing.T) {
 	})
 }
 
-func testAccAwsVpcIpamsDataSourceConfig_filterWithTiers() string {
+func testAccVPCIPAMsDataSourceConfig_filterWithTiers() string {
 	return acctest.ConfigCompose(testAccIPAMConfig_tags("Some", "Value"), `
 data "aws_vpc_ipams" "test" {
 	ipam_ids = [aws_vpc_ipam.test.id]
